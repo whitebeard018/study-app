@@ -19,6 +19,12 @@ class PomodoroTimer:
         time.sleep(BREAK_TIME)
         notification.notify(title="Break over!", message="Get back to work!")
 
+    def __init__(self, work_duration=25*60, break_duration=5*60):
+        self.work_duration = work_duration
+        self.break_duration = break_duration
+        self.session_count = 0
+    
+
 if __name__ == "__main__":
     timer = PomodoroTimer()
     while True:
