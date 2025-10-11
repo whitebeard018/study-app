@@ -594,6 +594,8 @@
           <h3>Distraction Detector (MVP)</h3>
           <video id="webcam" width="320" height="240" autoplay></video><br>
           <button onclick="startDetector()">Start Detection</button>
+          <button id="end-detection-btn" onclick="endDetector()" style="margin-left:0px;">End Detection</button>
+          
           <p id="detector-status"></p>
         </div>
       </div>
@@ -644,7 +646,7 @@
     // --- Distraction Detector (SocketIO + webcam) ---
     let socket, stream, webcamInterval;
     function startDetector() {
-  if (!window.beepAudio) window.beepAudio = new Audio('beep.wav');
+  if (!window.beepAudio) window.beepAudio = new Audio('beep.mp4');
   if (!socket) {
     socket = io('http://localhost:5000');
     socket.on('status', (data) => {
@@ -667,7 +669,30 @@
           socket.emit('frame', dataURL);
         }, 1000);
       });
+            document.getElementById('start-detection-btn').style.display = 'none';
+document.getElementById('end-detection-btn').style.display = 'inline-block';
+      document.getElementById('detector-status').innerText = "Detection started. Monitoring...";
+
     }
+      function endDetector() {
+    // Stop sending frames
+    clearInterval(webcamInterval);
+    // Stop the webcam stream
+      if (stream) {
+    stream.getTracks().forEach(track => track.stop());
+    stream = null;
+    }
+    // Reset video element
+    const video = document.getElementById('webcam');
+    if (video) {
+      video.srcObject = null;
+    }
+    document.getElementById('detector-status').innerText = "Detection ended.";
+
+    // Hide End button, show Start button again
+    document.getElementById('end-detection-btn').style.display = "none";
+    document.getElementById('start-detection-btn').style.display = "inline-block";
+}
     // --- Timer ---
     let timerId;
     function startTimer() {
