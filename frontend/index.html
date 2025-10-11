@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Study App Dashboard</title>
+  <meta charset="utf-8">
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f8fc; }
+    .app-layout { display: flex; min-height: 100vh; }
+    .sidebar {
+      background: #23395d;
+      color: #fff;
+      width: 220px;
+      min-width: 190px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
+      padding-top: 40px;
+      box-shadow: 2px 0 18px rgba(34,60,110,0.09);
+    }
+    .sidebar-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 46px;
+      letter-spacing: 2.5px;
+    }
+    .sidebar button {
+      background: none;
+      border: none;
+      color: inherit;
+      font-size: 1.13em;
+      margin-bottom: 10px;
+      padding: 15px 34px;
+      width: 100%;
+      text-align: left;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .sidebar button:hover, .sidebar button.active {
+      background: #3b526f;
+    }
+    .main-content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #ebc9c9;
+      min-height: 100vh;
+      padding: 0;
+    }
+    .feature-panel {
+      display: none;
+      width: 100%;
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+    }
+    .feature-panel.active {
+      display: flex;
+    }
+    .doubt-solver-container {
+      text-align: center;
+      margin: auto;
+      padding: 36px 32px;
+      min-width: 320px;
+      max-width: 480px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(40,60,110,0.07);
+    }
+    .doubt-solver-title {
+      font-size: 2.1em;
+      font-weight: bold;
+      margin-bottom: 28px;
+      background: linear-gradient(90deg,#0546bd 20%,#0de0c7 80%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 2px 14px rgba(80,140,220,0.12);
+      letter-spacing: 1.5px;
+    }
+    .doubt-solver-inputs {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      align-items: center;
+    }
+    #doubt-question {
+      font-size: 1em;
+      padding: 9px 14px;
+      border: 1px solid #bfc6da;
+      border-radius: 8px;
+      width: 68%;
+      transition: border 0.16s;
+    }
+    #doubt-question:focus {
+      border: 1.5px solid #0de0c7;
+      outline: none;
+    }
+    .doubt-solver-inputs button {
+      font-size: 1em;
+      padding: 10px 24px;
+      border: none;
+      background: linear-gradient(90deg,#0546bd 40%,#0de0c7 100%);
+      color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(80,140,220,0.13);
+      cursor: pointer;
+    }
+    .doubt-solver-output {
+      margin-top: 36px;
+      font-size: 1.35em;
+      color: #333;
+      font-weight: 500;
+      min-height: 40px;
+      transition: color 0.2s;
+    }
+    .simple-panel {
+      background: #fff;
+      border-radius: 18px;
+      padding: 38px 38px;
+      box-shadow: 0 4px 24px rgba(40,60,110,0.05);
+      min-width: 320px;
+      max-width: 520px;
+      margin: auto;
+      text-align: center;
+    }
+    .simple-panel h3 { margin-top: 0; margin-bottom: 22px;}
+    .simple-panel input, .simple-panel button { margin-bottom: 12px; }
+    .simple-panel ul { padding-left: 22px; }
+  </style>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-title">Study App</div>
+      <button class="active" onclick="showPanel('detector')">Distraction Detector</button>
+      <button onclick="showPanel('timer')">Timer</button>
+      <button onclick="showPanel('todo')">Todo</button>
+      <button onclick="showPanel('doubt')">Doubt Solver</button>
+    </aside>
+    <main class="main-content">
+      <!-- Distraction Detector -->
+      <div id="detector" class="feature-panel active">
+        <div class="simple-panel">
+          <h3>Distraction Detector (MVP)</h3>
+          <video id="webcam" width="320" height="240" autoplay></video><br>
+          <button onclick="startDetector()">Start Detection</button>
+          <p id="detector-status"></p>
+        </div>
+      </div>
+      <!-- Timer -->
+      <div id="timer" class="feature-panel">
+        <div class="simple-panel">
+          <h3>Timer</h3>
+          <input id="timer-minutes" type="number" value="25" min="1" max="120"> minutes
+          <button onclick="startTimer()">Start Timer</button>
+          <div id="timer-display"></div>
+        </div>
+      </div>
+      <!-- Todo -->
+      <div id="todo" class="feature-panel">
+        <div class="simple-panel">
+          <h3>Todo List</h3>
+          <input id="todo-input" type="text" placeholder="New task...">
+          <button onclick="addTodo()">Add</button>
+          <ul id="todo-list"></ul>
+        </div>
+      </div>
+      <!-- Doubt Solver -->
+      <div id="doubt" class="feature-panel">
+        <div class="doubt-solver-container">
+          <div class="doubt-solver-title">Doubt Solver</div>
+          <div class="doubt-solver-inputs">
+            <input id="doubt-question" type="text" placeholder="Enter your question..." />
+            <button onclick="askDoubt()">Ask</button>
+          </div>
+          <div id="doubt-response" class="doubt-solver-output"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script>
+    // Sidebar logic
+    function showPanel(panel) {
+      document.querySelectorAll('.feature-panel').forEach(div=>div.classList.remove('active'));
+      document.querySelectorAll('.sidebar button').forEach(btn=>btn.classList.remove('active'));
+      document.getElementById(panel).classList.add('active');
+      const btnMap = ["detector","timer","todo","doubt"];
+      Array.from(document.querySelectorAll('.sidebar button'))
+        .forEach((btn, idx) => { if(btnMap[idx]===panel) btn.classList.add('active'); });
+    }
+
+    // --- Distraction Detector (SocketIO + webcam) ---
+    let socket, stream, webcamInterval;
+    function startDetector() {
+      if (!socket) {
+        socket = io('http://localhost:5000');
+        socket.on('status', (data) => {
+          document.getElementById('detector-status').innerText = data.msg || '';
+        });
+      }
+      navigator.mediaDevices.getUserMedia({ video: true }).then(s => {
+        stream = s;
+        const video = document.getElementById('webcam');
+        video.srcObject = stream;
+        const canvas = document.createElement('canvas');
+        canvas.width = 320; canvas.height = 240;
+        webcamInterval = setInterval(() => {
+          canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+          const dataURL = canvas.toDataURL('image/jpeg');
+          socket.emit('frame', dataURL);
+        }, 1000); // 1 frame per second
+      });
+    }
+
+    // --- Timer (Simple, in-browser) ---
+    let timerId;
+    function startTimer() {
+      let mins = parseInt(document.getElementById('timer-minutes').value, 10) || 25;
+      let secs = mins * 60;
+      document.getElementById('timer-display').innerText = `Time left: ${mins}:00`;
+      clearInterval(timerId);
+      timerId = setInterval(() => {
+        secs--;
+        let m = Math.floor(secs/60), s = secs%60;
+        document.getElementById('timer-display').innerText = `Time left: ${m}:${('0'+s).slice(-2)}`;
+        if(secs <= 0) {
+          clearInterval(timerId);
+          document.getElementById('timer-display').innerText = "Time's up!";
+        }
+      }, 1000);
+    }
+
+    // --- Todo List ---
+    function addTodo() {
+      let val = document.getElementById('todo-input').value.trim();
+      if(!val) return;
+      let li = document.createElement('li');
+      li.innerText = val;
+      li.onclick = () => li.remove();
+      document.getElementById('todo-list').appendChild(li);
+      document.getElementById('todo-input').value = '';
+      // For backend sync: add AJAX here to /api/todo if needed
+    }
+
+    // --- Doubt Solver ---
+    function askDoubt() {
+      let q = document.getElementById('doubt-question').value.trim();
+      if (!q) return;
+      document.getElementById('doubt-response').innerText = "thinking...";
+      fetch('http://localhost:3000/ask', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({question: q})
+      })
+      .then(r=>r.json())
+      .then(data=>{
+        document.getElementById('doubt-response').innerText = data.answer || "No answer.";
+      })
+      .catch(err=>{
+        document.getElementById('doubt-response').innerText = "Error: " + err;
+      });
+    }
+  </script>
+</body>
+</html>
