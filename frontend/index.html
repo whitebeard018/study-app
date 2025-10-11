@@ -1,151 +1,584 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Study App Dashboard</title>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
+  <title>Study App</title>
+  <meta name="viewport" content="width=1024">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:600,500,400&display=swap">
   <style>
-    body { margin: 0; font-family: Arial, sans-serif; background: #f5f8fc; }
-    .app-layout { display: flex; min-height: 100vh; }
+
+/* Todo List */
+#todo .simple-panel {
+  max-width: 600px;
+  margin: auto;
+}
+#todo input#todo-input {
+  width: 75%;
+  font-size: 1.05em;
+  padding: 10px 14px;
+  border: 1.5px solid #bfc6da;
+  border-radius: 10px;
+  transition: border-color 0.27s ease;
+}
+#todo input#todo-input:focus {
+  border-color: #0de0c7;
+  outline: none;
+}
+#todo button {
+  padding: 10px 24px;
+  font-size: 1.1em;
+  background: linear-gradient(90deg,#0546bd 40%,#0de0c7 100%);
+  border: none;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(13,224,199,0.45);
+  transition: background 0.23s ease;
+}
+#todo button:hover {
+  background: linear-gradient(90deg,#0355a1 40%,#0aa497 100%);
+}
+#todo ul#todo-list {
+  list-style-type: disc;
+  margin-top: 16px;
+  padding-left: 20px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  color: #272727;
+  font-weight: 500;
+  font-size: 1.05em;
+}
+#todo ul#todo-list li {
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: text-decoration 0.27s ease;
+}
+#todo ul#todo-list li:hover {
+  text-decoration: line-through;
+  color: #777;
+}
+
+/* Distraction Detector */
+#detector .simple-panel {
+  max-width: 360px;
+  margin: auto;
+  padding: 36px 24px 50px 24px;
+  box-shadow: 0 8px 34px rgba(40, 60, 110, 0.15);
+  border-radius: 22px;
+  background: #fff;
+}
+#detector h3 {
+  font-size: 1.9em;
+  font-weight: 700;
+  margin-bottom: 22px;
+  color: #494d6a;
+}
+#detector video#webcam {
+  border-radius: 16px;
+  margin-bottom: 18px;
+  width: 320px;
+  height: 240px;
+  box-shadow: 0 8px 18px rgba(63, 99, 255, 0.07);
+  background: #000;
+}
+#detector button {
+  padding: 12px 28px;
+  font-size: 1.15em;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  background: linear-gradient(90deg,#3b6fff,#0de0c7 100%);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 6px 18px rgba(14, 214, 199, 0.38);
+  transition: background 0.25s ease;
+}
+#detector button:hover {
+  background: linear-gradient(90deg,#2a53cc,#0aa497 100%);
+}
+#detector p#detector-status {
+  margin-top: 28px;
+  font-weight: 600;
+  font-size: 1.25em;
+  color: #374151;
+  min-height: 40px;
+  text-align: center;
+  letter-spacing: 0.65px;
+}
+
+/* Study Timer */
+#timer .simple-panel {
+  max-width: 380px;
+  margin: auto;
+  padding: 36px 28px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 8px 28px rgba(40, 60, 110, 0.1);
+}
+#timer h3 {
+  font-weight: 700;
+  font-size: 2.1em;
+  margin-bottom: 26px;
+  color: #5031f4;
+}
+#timer input#timer-minutes {
+  width: 100%;
+  font-size: 1.3em;
+  padding: 14px 12px;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  margin-bottom: 22px;
+  font-weight: 600;
+  text-align: center;
+  transition: border-color 0.25s ease;
+}
+#timer input#timer-minutes:focus {
+  outline: none;
+  border-color: #5031f4;
+}
+#timer button {
+  width: 100%;
+  padding: 15px 0;
+  font-size: 1.3em;
+  color: white;
+  font-weight: 700;
+  border-radius: 16px;
+  background: linear-gradient(90deg, #6b4eff 60%, #30d39a 100%);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(48, 211, 154, 0.47);
+  transition: background 0.28s ease;
+}
+#timer button:hover {
+  background: linear-gradient(90deg, #5437e5 60%, #279f86 100%);
+}
+#timer #timer-display {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 1.9em;
+  font-weight: 700;
+  color: #3a3f58;
+  min-height: 36px;
+}
+
+    body {
+      margin: 0;
+      font-family: 'Inter', Arial, sans-serif;
+      background: linear-gradient(120deg, #faf5ff 0%, #e7f1ff 100%);
+      min-height: 100vh;
+      color: #262933;
+    }
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
     .sidebar {
-      background: #23395d;
-      color: #fff;
-      width: 220px;
-      min-width: 190px;
+      width: 270px;
+      background: #fff;
+      border-right: 2px solid #f3f5fb;
       display: flex;
       flex-direction: column;
-      align-items: stretch;
-      justify-content: flex-start;
-      padding-top: 40px;
-      box-shadow: 2px 0 18px rgba(34,60,110,0.09);
+      padding: 22px 0 0 0;
+      min-height: 100vh;
+      box-shadow: 0 8px 32px rgba(66,67,123,0.07);
+      position: relative;
     }
-    .sidebar-title {
-      font-size: 1.5rem;
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 0 32px 30px 32px;
+    }
+    .sidebar-header img {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: #eff2fb;
+      padding: 5px;
+    }
+    .sidebar-header .header-title {
+      font-size: 1.4em;
       font-weight: bold;
-      text-align: center;
-      margin-bottom: 46px;
-      letter-spacing: 2.5px;
+      color: #4e38a9;
+      letter-spacing: 1.2px;
     }
-    .sidebar button {
+    .sidebar .tagline {
+      font-size: 0.96em;
+      color: #95a3bb;
+      margin: -20px 0 18px 36px;
+      font-weight: 500;
+      letter-spacing: 0.2px;
+    }
+    .sidebar-label {
+      font-size: 0.82em;
+      color: #929ab9;
+      font-weight: 600;
+      letter-spacing: 1.3px;
+      margin: 16px 0 7px 36px;
+    }
+    .nav-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 25px 0;
+    }
+    .nav-list li {
+      margin: 0 0 6px 0;
+    }
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      width: 100%;
+      padding: 13px 36px;
+      font-size: 1.08em;
+      color: #352e58;
+      border-radius: 10px;
       background: none;
       border: none;
-      color: inherit;
-      font-size: 1.13em;
-      margin-bottom: 10px;
-      padding: 15px 34px;
+      cursor: pointer;
+      font-family: inherit;
+      text-align: left;
+      transition: background 0.13s, color 0.13s;
+      font-weight: 500;
+    }
+    .nav-btn.active, .nav-btn:focus, .nav-btn:hover {
+      background: linear-gradient(90deg,#dde2fb,#f3dfff 60%);
+      color: #4d368e;
+    }
+    .nav-btn .icon {
+      font-size: 1.1em;
+      opacity: 0.95;
+    }
+    .pro-tip-card {
+      background: linear-gradient(120deg, #4149c6 60%, #a53dde 100%);
+      color: #fff;
+      border-radius: 12px;
+      margin: 22px 24px 34px 24px;
+      padding: 18px 22px;
+      min-height: 56px;
+      font-size: 1.05em;
+      font-weight: 500;
+      box-shadow: 0 2px 12px rgba(120,67,220,0.06);
+    }
+    .pro-tip-card span {
+      font-size: 0.97em;
+      font-weight: 400;
+      display: block;
+      opacity: 0.88;
+    }
+    .sidebar-footer {
+      position: absolute;
+      bottom: 18px;
+      left: 0;
       width: 100%;
       text-align: left;
-      border-radius: 7px;
-      cursor: pointer;
-      transition: background 0.15s;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
-    .sidebar button:hover, .sidebar button.active {
-      background: #3b526f;
+    .sidebar-footer .profile-icon {
+      background: #f5f3ff;
+      color: #7353d3;
+      font-size: 1.19em;
+      padding: 11px 15px;
+      border-radius: 50%;
+      font-weight: bold;
+      margin-right: 7px;
+    }
+    .sidebar-footer .footer-text {
+      font-size: 1em;
+      font-weight: 600;
+      color: #854dc5;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    } 
+    .sidebar-footer .footer-text small { 
+      color: #848bb3; font-weight: 400; font-size: 0.99em 
     }
     .main-content {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #ebc9c9;
+      flex: 1; padding: 0 0; background: transparent;
       min-height: 100vh;
-      padding: 0;
     }
-    .feature-panel {
-      display: none;
-      width: 100%;
-      height: 100%;
-      align-items: center;
-      justify-content: center;
+    .dashboard-wrapper {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 35px 0 0 0;
+      min-height: 100vh;
     }
-    .feature-panel.active {
-      display: flex;
-    }
-    .doubt-solver-container {
-      text-align: center;
-      margin: auto;
-      padding: 36px 32px;
-      min-width: 320px;
-      max-width: 480px;
-      background: #fff;
-      border-radius: 20px;
-      box-shadow: 0 8px 32px rgba(40,60,110,0.07);
-    }
-    .doubt-solver-title {
-      font-size: 2.1em;
-      font-weight: bold;
-      margin-bottom: 28px;
-      background: linear-gradient(90deg,#0546bd 20%,#0de0c7 80%);
+    .dashboard-header {
+      font-size: 2.7em;
+      font-weight: 700;
+      letter-spacing: 1.4px;
+      background: linear-gradient(90deg,#8056e8,#36c5e8 60%);
       background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
       -webkit-text-fill-color: transparent;
-      text-shadow: 0 2px 14px rgba(80,140,220,0.12);
-      letter-spacing: 1.5px;
+      margin-top: 3px;
+      margin-bottom: 10px;
     }
-    .doubt-solver-inputs {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      align-items: center;
-    }
-    #doubt-question {
-      font-size: 1em;
-      padding: 9px 14px;
-      border: 1px solid #bfc6da;
-      border-radius: 8px;
-      width: 68%;
-      transition: border 0.16s;
-    }
-    #doubt-question:focus {
-      border: 1.5px solid #0de0c7;
-      outline: none;
-    }
-    .doubt-solver-inputs button {
-      font-size: 1em;
-      padding: 10px 24px;
-      border: none;
-      background: linear-gradient(90deg,#0546bd 40%,#0de0c7 100%);
-      color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(80,140,220,0.13);
-      cursor: pointer;
-    }
-    .doubt-solver-output {
-      margin-top: 36px;
-      font-size: 1.35em;
-      color: #333;
+    .dashboard-header .wave { font-size: 0.84em; }
+    .dashboard-subheader {
+      color: #525167;
+      font-size: 1.2em;
       font-weight: 500;
-      min-height: 40px;
-      transition: color 0.2s;
+      margin-bottom: 33px;
+      letter-spacing: 0.04em;
     }
-    .simple-panel {
+    .stats-row {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 26px;
+    }
+    .stat-card {
+      flex: 1;
+      min-width: 200px;
       background: #fff;
-      border-radius: 18px;
-      padding: 38px 38px;
-      box-shadow: 0 4px 24px rgba(40,60,110,0.05);
-      min-width: 320px;
-      max-width: 520px;
-      margin: auto;
-      text-align: center;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(120,67,220,0.08);
+      padding: 27px 28px 22px 27px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      align-items: flex-start;
+    }
+    .stat-card-title { 
+      font-size: 1.1em; font-weight: 600; color: #829ad0; margin-bottom: 3px; opacity: 0.93; letter-spacing: 0.7px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .stat-card-main {
+      font-size: 2.06em;
+      font-weight: 700;
+      color: #276de4;
+      margin-bottom: 2px;
+    }
+    .stat-card-purple { color: #984ed2; }
+    .stat-card-green { color: #19b87a; }
+    .stat-card-orange { color: #ea6731; }
+    .stat-card-caption {
+      font-size: 1.07em; color: #aaa8bc; font-weight: 500;
+    }
+    .cards-row {
+      display: flex;
+      gap: 32px;
+      margin-bottom: 0;
+    }
+    .tasks-card, .quick-actions-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(120,67,220,0.08);
+      padding: 24px 30px 22px 30px;
+      flex: 2;
+      min-width: 350px;
+      min-height: 290px;
+      display: flex;
+      flex-direction: column;
+    }
+    .quick-actions-card {
+      flex: 1;
+      min-width: 270px;
+      max-width: 290px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      align-items: stretch;
+      padding: 24px 28px 22px 28px;
+    }
+    .tasks-title-row { display: flex; align-items: center; justify-content: space-between; }
+    .tasks-title { font-size: 1.28em; font-weight: 700; color: #334d7c; letter-spacing: 1.2px;}
+    .tasks-view-all { color: #686d92; font-size: 1em; font-weight: 500; text-decoration: none; transition: color 0.13s; }
+    .tasks-view-all:hover { color: #7f3fe9; }
+    .tasks-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      margin-top: 32px;
+      color: #b2b4c0;
+      font-size: 1.18em;
+    }
+    .tasks-empty svg { font-size: 2.6em; margin-bottom: 13px;}
+    .quick-action-btn {
+      width: 100%;
+      padding: 13px 0;
+      font-size: 1.11em;
+      font-weight: 700;
+      border-radius: 9px;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      margin-bottom: 4px;
+      background: linear-gradient(90deg,#21d176,#0cafbf 100%);
+      color: #fff;
+      transition: background 0.14s, box-shadow 0.14s;
+    }
+    .quick-action-btn.blue {
+      background: linear-gradient(90deg,#0579ff,#5f40de 100%);
+    }
+    .quick-action-btn.purple {
+      background: linear-gradient(90deg,#ae41e7 50%,#7e40de 100%);
+    }
+    .daily-goal-card {
+      background: #f5f0fd;
+      border-radius: 10px;
+      padding: 13px 16px;
+      color: #a266e8;
+      font-size: 0.98em;
+      font-weight: 600;
+      margin-top: 9px;
+      margin-bottom: 2px;
+    }
+    .daily-goal-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: #e0cdfa;
+      border-radius: 6px;
+      margin-top: 5px;
+      margin-bottom: 2px;
+      overflow: hidden;
+    }
+    .daily-goal-bar {
+      display: block;
+      height: 100%;
+      background: linear-gradient(90deg,#da7cf6 50%,#536ffa 100%);
+      border-radius: 6px;
+      transition: width 0.32s;
+    }
+    .feature-panel { display: none; width: 100%; height: 100%; align-items: center; justify-content: center; }
+    .feature-panel.active { display: flex; }
+    .simple-panel {
+      background: #fff; border-radius: 18px; padding: 38px 38px; box-shadow: 0 4px 24px rgba(40,60,110,0.05);
+      min-width: 320px; max-width: 520px; margin: auto; text-align: center;
     }
     .simple-panel h3 { margin-top: 0; margin-bottom: 22px;}
     .simple-panel input, .simple-panel button { margin-bottom: 12px; }
     .simple-panel ul { padding-left: 22px; }
+    .doubt-solver-container {
+      text-align: center; margin: auto; padding: 36px 32px; min-width: 320px; max-width: 480px;
+      background: #fff; border-radius: 20px; box-shadow: 0 8px 32px rgba(40,60,110,0.07);
+    }
+    .doubt-solver-title {
+      font-size: 2.1em; font-weight: bold; margin-bottom: 28px;
+      background: linear-gradient(90deg,#0546bd 20%,#0de0c7 80%);
+      background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+      text-shadow: 0 2px 14px rgba(80,140,220,0.12); letter-spacing: 1.5px;
+    }
+    .doubt-solver-inputs {
+      display: flex; gap: 12px; justify-content: center; align-items: center;
+    }
+    #doubt-question {
+      font-size: 1em; padding: 9px 14px; border: 1px solid #bfc6da;
+      border-radius: 8px; width: 68%; transition: border 0.16s;
+    }
+    #doubt-question:focus { border: 1.5px solid #0de0c7; outline: none; }
+    .doubt-solver-inputs button {
+      font-size: 1em; padding: 10px 24px; border: none;
+      background: linear-gradient(90deg,#0546bd 40%,#0de0c7 100%);
+      color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(80,140,220,0.13);
+      cursor: pointer;
+    }
+    .doubt-solver-output {
+      margin-top: 36px; font-size: 1.35em; color: #333; font-weight: 500; min-height: 40px; transition: color 0.2s;
+    }
+    @media (max-width: 1200px){
+      .dashboard-wrapper { max-width: 96vw;}
+      .cards-row, .stats-row { flex-direction: column; gap: 22px;}
+      .tasks-card, .quick-actions-card { min-width: 0;}
+    }
+    @media (max-width: 950px){
+      .sidebar { position: relative; min-width: 100px; width: 80px; }
+      .sidebar-header, .sidebar-label, .pro-tip-card, .sidebar-footer { display: none; }
+      .sidebar .nav-btn { justify-content: center; padding: 13px 0; font-size: 1.3em;}
+      .dashboard-wrapper { padding: 16px 3vw 0 3vw;}
+    }
+    @media (max-width: 600px){
+      .layout { flex-direction: column; min-height: unset; }
+      .sidebar { width: 100vw; min-width: 0; flex-direction: row; border: none; min-height: 0; box-shadow: none; }
+      .main-content { padding: 2vw 0; }
+    }
   </style>
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 </head>
 <body>
-  <div class="app-layout">
-    <aside class="sidebar">
-      <div class="sidebar-title">Study App</div>
-      <button class="active" onclick="showPanel('detector')">Distraction Detector</button>
-      <button onclick="showPanel('timer')">Timer</button>
-      <button onclick="showPanel('todo')">Todo</button>
-      <button onclick="showPanel('doubt')">Doubt Solver</button>
-    </aside>
-    <main class="main-content">
+  <div class="layout">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <img src="https://img.icons8.com/color/96/graduation-cap--v2.png" alt="App Icon">
+        <div>
+          <div class="header-title">Study App</div>
+        </div>
+      </div>
+      <div class="sidebar-label">TOOLS</div>
+      <ul class="nav-list">
+        <li><button class="nav-btn active" onclick="showPanel('dashboard')"><span class="icon">🖥️</span>Dashboard</button></li>
+        <li><button class="nav-btn" onclick="showPanel('detector')"><span class="icon">🚦</span>Distraction Detector</button></li>
+        <li><button class="nav-btn" onclick="showPanel('timer')"><span class="icon">⏰</span>Study Timer</button></li>
+        <li><button class="nav-btn" onclick="showPanel('todo')"><span class="icon">📝</span>Todo List</button></li>
+        <li><button class="nav-btn" onclick="showPanel('doubt')"><span class="icon">🤔</span>Doubt Solver</button></li>
+      </ul>
+      <div class="pro-tip-card">
+        <b>Pro Tip</b><br>
+        <span>Use the Pomodoro technique:<br>25 min focus, 5 min break!</span>
+      </div>
+      <div class="sidebar-footer">
+        <span class="profile-icon">S</span>
+        <div class="footer-text">
+          Student
+
+        </div>
+      </div>
+    </nav>
+    <!-- Main Content Area -->
+    <div class="main-content">
+      <!-- Dashboard Panel -->
+      <div id="dashboard" class="dashboard-wrapper feature-panel active">
+        <div class="dashboard-header">
+          Welcome back, Student! <span class="wave">👋</span>
+        </div>
+        <div class="dashboard-subheader">
+          Let's make today productive and focused
+        </div>
+
+        <div class="cards-row">
+          <div class="tasks-card">
+            <div class="tasks-title-row">
+              <div class="tasks-title">Today's Tasks</div>
+              <a class="tasks-view-all" href="#">View All &rarr;</a>
+            </div>
+            <div class="tasks-empty">
+              <svg width="54" height="54" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="27" cy="27" r="25" stroke="#d9daf4" stroke-width="4"/>
+                <path d="M18 34h18l-9-16-9 16Z" fill="#ececf7"/>
+              </svg>
+              No tasks due today!<br>
+              <span style="font-size:0.89em;color:#b6b7d8;">You're all caught up 🎉</span>
+            </div>
+          </div>
+          <div class="quick-actions-card">
+            <div style="font-size: 1.16em;font-weight:700;color:#363874;margin-bottom:15px;">Quick Actions</div>
+            <button class="quick-action-btn green" onclick="showPanel('timer')">Start Study Session</button>
+            <button class="quick-action-btn blue" onclick="showPanel('todo')">Add New Task</button>
+            <button class="quick-action-btn purple" onclick="showPanel('doubt')">Ask a Question</button>
+            <div class="daily-goal-card">
+              <div style="font-size:1em;font-weight:600;margin-bottom:5px;">Daily Goal</div>
+              <div style="font-weight:400;color:#b088f8;">
+                Study for 120 minutes today
+              </div>
+              <div class="daily-goal-bar-bg">
+                <div class="daily-goal-bar" style="width:83%"></div>
+              </div>
+              <div style="color:#b088f8;font-size:.97em;font-weight:500;">100/120 minutes</div>
+            </div>
+          </div>
+        </div>
+      </div>
       <!-- Distraction Detector -->
-      <div id="detector" class="feature-panel active">
+      <div id="detector" class="feature-panel">
         <div class="simple-panel">
           <h3>Distraction Detector (MVP)</h3>
           <video id="webcam" width="320" height="240" autoplay></video><br>
@@ -182,28 +615,35 @@
           <div id="doubt-response" class="doubt-solver-output"></div>
         </div>
       </div>
-    </main>
+    </div>
   </div>
   <script>
-    // Sidebar logic
     function showPanel(panel) {
-      document.querySelectorAll('.feature-panel').forEach(div=>div.classList.remove('active'));
-      document.querySelectorAll('.sidebar button').forEach(btn=>btn.classList.remove('active'));
-      document.getElementById(panel).classList.add('active');
-      const btnMap = ["detector","timer","todo","doubt"];
-      Array.from(document.querySelectorAll('.sidebar button'))
-        .forEach((btn, idx) => { if(btnMap[idx]===panel) btn.classList.add('active'); });
+      document.querySelectorAll('.feature-panel').forEach(div => div.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.quick-action-btn').forEach(btn => btn.classList.remove('active'));
+      if (document.getElementById(panel)) document.getElementById(panel).classList.add('active');
+      // Activate correct sidebar button
+      const btnMap = ["dashboard", "detector", "timer", "todo", "doubt"];
+      Array.from(document.querySelectorAll('.nav-btn')).forEach((btn, idx) => {
+        if (btnMap[idx] === panel) btn.classList.add('active');
+      });
     }
 
     // --- Distraction Detector (SocketIO + webcam) ---
     let socket, stream, webcamInterval;
     function startDetector() {
-      if (!socket) {
-        socket = io('http://localhost:5000');
-        socket.on('status', (data) => {
-          document.getElementById('detector-status').innerText = data.msg || '';
-        });
+  if (!window.beepAudio) window.beepAudio = new Audio('beep.wav');
+  if (!socket) {
+    socket = io('http://localhost:5000');
+    socket.on('status', (data) => {
+      document.getElementById('detector-status').innerText = data.msg || '';
+      if (data.msg && data.msg.includes('WAKE UP'))  {
+        window.beepAudio.play();
       }
+    });
+  }
+
       navigator.mediaDevices.getUserMedia({ video: true }).then(s => {
         stream = s;
         const video = document.getElementById('webcam');
@@ -214,11 +654,10 @@
           canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
           const dataURL = canvas.toDataURL('image/jpeg');
           socket.emit('frame', dataURL);
-        }, 1000); // 1 frame per second
+        }, 1000);
       });
     }
-
-    // --- Timer (Simple, in-browser) ---
+    // --- Timer ---
     let timerId;
     function startTimer() {
       let mins = parseInt(document.getElementById('timer-minutes').value, 10) || 25;
@@ -235,7 +674,6 @@
         }
       }, 1000);
     }
-
     // --- Todo List ---
     function addTodo() {
       let val = document.getElementById('todo-input').value.trim();
@@ -247,7 +685,6 @@
       document.getElementById('todo-input').value = '';
       // For backend sync: add AJAX here to /api/todo if needed
     }
-
     // --- Doubt Solver ---
     function askDoubt() {
       let q = document.getElementById('doubt-question').value.trim();
