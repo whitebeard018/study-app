@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Doubt Solver Chat</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+    }
+
+    h2 { text-align: center; }
+
+    #chat {
+      border: 1px solid #ccc;
+      padding: 10px;
+      height: 400px;
+      overflow-y: auto;
+      background: #f9f9f9;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .message {
+      padding: 8px 12px;
+      border-radius: 15px;
+      max-width: 80%;
+    }
+
+    .user {
+      background-color: #cce5ff;
+      align-self: flex-end;
+      text-align: right;
+    }
+
+    .bot {
+      background-color: #e2e3e5;
+      align-self: flex-start;
+    }
+
+    #inputArea {
+      display: flex;
+      gap: 10px;
+    }
+
+    #question {
+      flex: 1;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>Doubt Solver Chat</h2>
+  <div id="chat"></div>
+
+  <div id="inputArea">
+    <input id="question" type="text" placeholder="Type your question here...">
+    <button onclick="ask()">Send</button>
+  </div>
+
+  <script>
+    const chat = document.getElementById('chat');
+
+    function addMessage(text, type) {
+      const msg = document.createElement('div');
+      msg.classList.add('message', type);
+      msg.innerText = text;
+      chat.appendChild(msg);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    async function ask() {
+      const input = document.getElementById('question');
+      const question = input.value.trim();
+      if (!question) return;
+
+      addMessage(question, 'user');
+      input.value = '';
+
+      // Show typing indicator
+      const typing = document.createElement('div');
+      typing.classList.add('message', 'bot');
+      typing.id = 'typing';
+      typing.innerText = 'Bot is typing...';
+      chat.appendChild(typing);
+      chat.scrollTop = chat.scrollHeight;
+
+      try {
+        const res = await fetch('http://localhost:3000/ask', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ question })
+        });
+        const data = await res.json();
+        // Remove typing indicator
+        typing.remove();
+        addMessage(data.answer, 'bot');
+      } catch (err) {
+        typing.remove();
+        addMessage("Error: Could not get answer.", 'bot');
+        console.error(err);
+      }
+    }
+
+    // Send message on Enter key
+    document.getElementById('question').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') ask();
+    });
+  </script>
+</body>
+</html>
