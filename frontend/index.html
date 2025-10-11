@@ -125,7 +125,7 @@
 #timer input#timer-minutes {
   width: 100%;
   font-size: 1.3em;
-  padding: 14px 12px;
+  padding: 14px 0px;
   border: 2px solid #ccc;
   border-radius: 12px;
   margin-bottom: 22px;
@@ -308,6 +308,14 @@
       padding: 35px 0 0 0;
       min-height: 100vh;
     }
+    .dashboard-top {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 10px;
+      
+    }
+
     .dashboard-header {
       font-size: 2.7em;
       font-weight: 700;
@@ -317,16 +325,18 @@
       -webkit-background-clip: text;
       color: transparent;
       -webkit-text-fill-color: transparent;
-      margin-top: 3px;
-      margin-bottom: 10px;
+      margin-top: 0px;
+      margin-bottom: 0px;
     }
     .dashboard-header .wave { font-size: 0.84em; }
     .dashboard-subheader {
       color: #525167;
       font-size: 1.2em;
       font-weight: 500;
-      margin-bottom: 33px;
+      margin-top: 20px;
+      margin-bottom: 0px;
       letter-spacing: 0.04em;
+      opacity: 0.92;
     }
     .stats-row {
       display: flex;
@@ -422,7 +432,7 @@
     .quick-action-btn.purple {
       background: linear-gradient(90deg,#ae41e7 50%,#7e40de 100%);
     }
-    .daily-goal-card {
+     .daily-goal-card {
       background: #f5f0fd;
       border-radius: 10px;
       padding: 13px 16px;
@@ -447,7 +457,7 @@
       background: linear-gradient(90deg,#da7cf6 50%,#536ffa 100%);
       border-radius: 6px;
       transition: width 0.32s;
-    }
+    } 
     .feature-panel { display: none; width: 100%; height: 100%; align-items: center; justify-content: center; }
     .feature-panel.active { display: flex; }
     .simple-panel {
@@ -534,16 +544,18 @@
       </div>
     </nav>
     <!-- Main Content Area -->
+
     <div class="main-content">
-      <!-- Dashboard Panel -->
-      <div id="dashboard" class="dashboard-wrapper feature-panel active">
-        <div class="dashboard-header">
+          <div class="dashboard-top">
+            <div class="dashboard-header">
           Welcome back, Student! <span class="wave">👋</span>
         </div>
         <div class="dashboard-subheader">
           Let's make today productive and focused
         </div>
-
+        </div>
+      <!-- Dashboard Panel -->
+      <div id="dashboard" class="dashboard-wrapper feature-panel active">
         <div class="cards-row">
           <div class="tasks-card">
             <div class="tasks-title-row">
@@ -572,7 +584,6 @@
               <div class="daily-goal-bar-bg">
                 <div class="daily-goal-bar" style="width:83%"></div>
               </div>
-              <div style="color:#b088f8;font-size:.97em;font-weight:500;">100/120 minutes</div>
             </div>
           </div>
         </div>
