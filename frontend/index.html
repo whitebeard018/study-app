@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Study App — Step 2 (MediaPipe)</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- MediaPipe FaceMesh libs (required) -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+</head>
+<body>
+  <div id="app">
+    <header><h1>Study App — Step 2</h1></header>
+
+    <main style="display:flex; gap:16px;">
+      <section style="flex:1;">
+        <div>
+          <video id="video" autoplay playsinline style="width:100%; max-width:640px; border:1px solid #ccc; background:#000"></video>
+        </div>
+
+        <div style="margin-top:8px;">
+          <button id="start-camera">Start Camera</button>
+          <button id="stop-camera">Stop Camera</button>
+          <label style="margin-left:16px;">Send FPS:
+            <select id="fps-select">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="4" selected>4</option>
+            </select>
+          </label>
+        </div>
+
+        <div style="margin-top:8px;">
+          <div>Socket status: <span id="socket-status">disconnected</span></div>
+          <div>Detection status: <span id="detect-status">idle</span></div>
+          <div>Server response:</div>
+          <pre id="srv-resp">—</pre>
+        </div>
+      </section>
+
+      <aside style="width:320px;">
+        <h3>Sidebar (placeholder)</h3>
+        <div id="session-info">Session: not started</div>
+        <div style="margin-top:12px;">
+          <h4>Instructions</h4>
+          <ol>
+            <li>Click <b>Start Camera</b>.</li>
+            <li>Allow camera permission.</li>
+            <li>Blink normally (no alarm). Close eyes >2s to trigger alarm.</li>
+          </ol>
+        </div>
+      </aside>
+    </main>
+
+    <canvas id="capture-canvas" style="display:none;"></canvas>
+    <audio id="alarm" src="alarm.mp3" preload="auto"></audio>
+  </div>
+
+  <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
+
